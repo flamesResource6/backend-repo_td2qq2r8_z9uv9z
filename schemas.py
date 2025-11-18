@@ -11,8 +11,8 @@ Model name is converted to lowercase for the collection name:
 - BlogPost -> "blogs" collection
 """
 
-from pydantic import BaseModel, Field
-from typing import Optional
+from pydantic import BaseModel, Field, EmailStr
+from typing import Optional, Literal
 
 # Example schemas (replace with your own):
 
@@ -22,7 +22,7 @@ class User(BaseModel):
     Collection name: "user" (lowercase of class name)
     """
     name: str = Field(..., description="Full name")
-    email: str = Field(..., description="Email address")
+    email: EmailStr = Field(..., description="Email address")
     address: str = Field(..., description="Address")
     age: Optional[int] = Field(None, ge=0, le=120, description="Age in years")
     is_active: bool = Field(True, description="Whether user is active")
@@ -37,6 +37,32 @@ class Product(BaseModel):
     price: float = Field(..., ge=0, description="Price in dollars")
     category: str = Field(..., description="Product category")
     in_stock: bool = Field(True, description="Whether product is in stock")
+
+# Xyber Clan SaaS schemas
+
+class Inquiry(BaseModel):
+    """
+    Leads/inquiries from the website
+    Collection name: "inquiry"
+    """
+    name: str = Field(..., description="Contact full name")
+    email: EmailStr = Field(..., description="Contact email")
+    company: Optional[str] = Field(None, description="Company name")
+    service: Literal["Web Services", "Security Audit", "Design"] = Field(
+        ..., description="Requested service category"
+    )
+    budget: Optional[str] = Field(None, description="Budget range text")
+    message: str = Field(..., description="Message details")
+    status: Literal["new", "contacted", "won", "lost"] = Field(
+        "new", description="Pipeline status"
+    )
+
+class NewsletterSubscriber(BaseModel):
+    """
+    Newsletter subscribers collected from the site
+    Collection name: "newslettersubscriber"
+    """
+    email: EmailStr = Field(..., description="Subscriber email")
 
 # Add your own schemas here:
 # --------------------------------------------------
